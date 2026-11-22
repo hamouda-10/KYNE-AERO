@@ -1,0 +1,3266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>KYNE AERO.VISION — Liquid-Chrome Sport Sunglasses</title>
+  <meta name="description" content="KYNE AERO.VISION. Liquid-chrome sport sunglasses engineered with photochromic optics, biomimetic cooling, and sintered magnesium-titanium architecture.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       1. GLOBAL TOKENS & RESET
+       ========================================================= */
+    :root {
+      --lime: #c6ff3d;
+      --txt: #f1f3ee;
+      --mute: rgba(241, 243, 238, 0.55);
+      --line: rgba(241, 243, 238, 0.22);
+      --line-subtle: rgba(241, 243, 238, 0.08);
+      --hue: 0deg;
+      --out: cubic-bezier(.16, 1, .3, 1);
+      --ease: cubic-bezier(.77, 0, .18, 1);
+      --spring: cubic-bezier(.34, 1.56, .64, 1);
+      --sx: 0;
+      --sy: 0;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: var(--txt);
+      font-family: 'Inter Tight', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: none; /* custom cursor */
+    }
+
+    /* Fixed 100vh stage */
+    #stage {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+      z-index: 2;
+    }
+
+    /* Faint lime radial glow at 50% 60% */
+    .stage-glow {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle 650px at 50% 60%, rgba(198, 255, 61, 0.09) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* SVG fractal-noise grain overlay at opacity .18 */
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.18;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Typography helpers */
+    .font-display {
+      font-family: 'Unbounded', sans-serif;
+      transform: skewX(-8deg);
+      display: inline-block;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* =========================================================
+       2. PERSISTENT HEADER & FOOTER
+       ========================================================= */
+    header#site-header {
+      position: fixed;
+      top: 0;
+      left: 2.2vw;
+      right: 2.2vw;
+      height: clamp(54px, 8.6vh, 80px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transform: translateY(-100%);
+      transition: transform 1.2s var(--out);
+    }
+    header#site-header.loaded {
+      transform: translateY(0);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--txt);
+      cursor: pointer;
+    }
+    .brand-svg {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-size: clamp(14px, 1.4vw, 17px);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .header-welcome {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--mute);
+      text-transform: uppercase;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(16px, 2.2vw, 32px);
+    }
+    .nav-btn {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--mute);
+      text-transform: uppercase;
+      text-decoration: none;
+      position: relative;
+      padding: 4px 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .nav-btn:hover {
+      color: var(--txt);
+    }
+    .nav-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--lime);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s var(--out);
+    }
+    .nav-btn:hover::after {
+      transform: scaleX(1);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: clamp(14px, 1.8vw, 24px);
+    }
+    .clock-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.1;
+      font-size: 10px;
+      color: var(--mute);
+      letter-spacing: 0.08em;
+    }
+    .clock-block .clock-tag {
+      color: var(--lime);
+      font-size: 9px;
+    }
+
+    .live-dot-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 14px;
+      height: 14px;
+    }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 10px var(--lime);
+    }
+    .live-ping {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid var(--lime);
+      animation: pingGlow 2.4s infinite cubic-bezier(0, 0, 0.2, 1);
+    }
+    @keyframes pingGlow {
+      0% { transform: scale(0.6); opacity: 1; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+
+    .preorder-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px 6px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--txt);
+      color: var(--txt);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.35s var(--out);
+    }
+    .preorder-pill .arrow-chip {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.35s var(--out), background 0.35s var(--out);
+    }
+    .preorder-pill:hover {
+      background: var(--lime);
+      border-color: var(--lime);
+      color: #000;
+    }
+    .preorder-pill:hover .arrow-chip {
+      transform: rotate(-45deg);
+      background: #000;
+      color: var(--lime);
+    }
+
+    /* Top corner captions (changing per scene) */
+    .top-corner {
+      position: fixed;
+      top: calc(clamp(54px, 8.6vh, 80px) + 24px);
+      z-index: 40;
+      pointer-events: none;
+    }
+    .top-corner.left {
+      left: 2.2vw;
+      text-align: left;
+    }
+    .top-corner.right {
+      right: 2.2vw;
+      text-align: right;
+    }
+    .ln {
+      overflow: hidden;
+      padding-bottom: 0.22em; /* so descenders never clip */
+    }
+    .corner-title {
+      font-size: clamp(16px, 1.8vw, 24px);
+      font-weight: 500;
+      color: var(--txt);
+      line-height: 1.15;
+      display: block;
+      transition: transform 0.6s var(--out), opacity 0.6s var(--out);
+    }
+    .corner-sub {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--mute);
+      text-transform: uppercase;
+      margin-top: 4px;
+      display: block;
+      transition: transform 0.6s var(--out), opacity 0.6s var(--out);
+    }
+
+    /* Persistent Footer */
+    footer#site-footer {
+      position: fixed;
+      bottom: 0;
+      left: 2.2vw;
+      right: 2.2vw;
+      height: 48px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      font-size: clamp(9px, 0.9vw, 12px);
+      letter-spacing: 0.12em;
+      color: var(--mute);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transform: translateY(100%);
+      transition: transform 1.2s var(--out);
+    }
+    footer#site-footer.loaded {
+      transform: translateY(0);
+    }
+
+    .footer-dashes {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dash-item {
+      height: 2px;
+      width: 14px;
+      background: var(--line);
+      border: none;
+      cursor: pointer;
+      transition: all 0.4s var(--out);
+      border-radius: 1px;
+    }
+    .dash-item.active {
+      width: 30px;
+      background: var(--lime);
+      box-shadow: 0 0 8px rgba(198, 255, 61, 0.6);
+    }
+
+    .footer-nav-cue {
+      background: none;
+      border: none;
+      color: var(--mute);
+      cursor: pointer;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      transition: color 0.3s;
+    }
+    .footer-nav-cue:hover {
+      color: var(--lime);
+    }
+
+    /* =========================================================
+       3. LENS COLOUR SYSTEM
+       ========================================================= */
+    .lens-picker {
+      position: fixed;
+      bottom: 64px;
+      right: 2.2vw;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .lens-picker-label {
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      color: var(--mute);
+      text-transform: uppercase;
+    }
+    .lens-orbs {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 12px;
+      background: rgba(14, 14, 14, 0.85);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      backdrop-filter: blur(12px);
+    }
+    .lens-orb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.3s var(--spring), border-color 0.3s;
+    }
+    .lens-orb:hover {
+      transform: scale(1.25);
+    }
+    .lens-orb.active {
+      transform: scale(1.3);
+      border-color: #fff;
+    }
+    .lens-orb.active::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid var(--lime);
+    }
+    .orb-acid  { background: #c6ff3d; box-shadow: 0 0 10px rgba(198, 255, 61, 0.4); }
+    .orb-ice   { background: #00e5ff; box-shadow: 0 0 10px rgba(0, 229, 255, 0.4); }
+    .orb-ember { background: #ff5500; box-shadow: 0 0 10px rgba(255, 85, 0, 0.4); }
+    .orb-ultra { background: #b347ff; box-shadow: 0 0 10px rgba(179, 71, 255, 0.4); }
+
+    /* Filter rule application for lens system */
+    .lens-hued {
+      filter: hue-rotate(var(--hue));
+      transition: filter 0.6s var(--out);
+    }
+    .lens-hued-half {
+      filter: hue-rotate(var(--hue-half, 0deg));
+      transition: filter 0.6s var(--out);
+    }
+
+    /* Spring pop on glasses when lens changed */
+    @keyframes springPop {
+      0% { transform: translate(calc(-50% + var(--glasses-tx, 0px)), calc(-50% + var(--glasses-ty, 0px))) scale(1); }
+      40% { transform: translate(calc(-50% + var(--glasses-tx, 0px)), calc(-50% + var(--glasses-ty, 0px))) scale(1.08) rotate(1.2deg); }
+      100% { transform: translate(calc(-50% + var(--glasses-tx, 0px)), calc(-50% + var(--glasses-ty, 0px))) scale(1); }
+    }
+    .spring-pop {
+      animation: springPop 0.65s var(--spring) forwards !important;
+    }
+
+    /* =========================================================
+       4. SCENE 1 — HERO
+       ========================================================= */
+    /* Wordmark marquee */
+    .wordmark-wrap {
+      position: absolute;
+      top: 25vh;
+      left: 0;
+      width: 100vw;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 2;
+      mix-blend-mode: screen;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+      transform-origin: center;
+      transition: transform 1.7s var(--ease), opacity 1.7s var(--ease);
+    }
+    .wordmark-track {
+      display: flex;
+      width: max-content;
+      will-change: transform;
+    }
+    .wordmark-img {
+      height: min(84vh, 46vw);
+      width: auto;
+      margin-top: calc(min(84vh, 46vw) * -0.31);
+      margin-bottom: calc(min(84vh, 46vw) * -0.38);
+      flex-shrink: 0;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Plinth */
+    .plinth-wrap {
+      position: absolute;
+      top: calc(74vh - 31vw);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      z-index: 3;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      transition: transform 1.7s var(--ease), opacity 1.7s var(--ease);
+    }
+    .plinth-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* WebGL Chroma-keyed Glasses Canvas */
+    .glasses-wrap {
+      position: absolute;
+      top: calc(74vh - 9vw);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 86vw;
+      max-width: 1380px;
+      aspect-ratio: 16 / 9;
+      z-index: 4;
+      mix-blend-mode: screen;
+      cursor: pointer;
+      transform-origin: center;
+      transition: opacity 1.7s var(--ease), clip-path 1.7s var(--ease);
+    }
+    #glasses-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
+    }
+
+    /* Fallback video/img if WebGL fails or loads */
+    #turntable-fallback-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .hero-caption {
+      position: absolute;
+      bottom: 5vh;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--mute);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+      transition: opacity 0.5s;
+    }
+    .caption-dot {
+      color: var(--lime);
+      animation: captionBlink 1.8s infinite;
+    }
+    @keyframes captionBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* =========================================================
+       5. SCENE 2 — DETAIL
+       ========================================================= */
+    #scene-detail {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s var(--ease);
+    }
+    #scene-detail.active {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    /* Copy on left (top 30vh) */
+    .detail-copy-wrap {
+      position: absolute;
+      top: 30vh;
+      left: 6vw;
+      width: min(38vw, 520px);
+      z-index: 8;
+    }
+    .striped-swatch {
+      width: 60px;
+      height: 12px;
+      background: repeating-linear-gradient(
+        45deg,
+        var(--lime),
+        var(--lime) 5px,
+        #000 5px,
+        #000 10px
+      );
+      margin-bottom: 22px;
+      border: 1px solid var(--lime);
+      box-shadow: 0 0 12px rgba(198, 255, 61, 0.3);
+    }
+    .detail-lens-heading {
+      font-size: clamp(24px, 3.2vw, 44px);
+      font-weight: 500;
+      color: var(--txt);
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .detail-lens-heading .lime-part {
+      color: var(--lime);
+    }
+    .detail-desc {
+      font-size: clamp(10px, 0.95vw, 12px);
+      line-height: 1.8;
+      letter-spacing: 0.08em;
+      color: var(--mute);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .detail-bottom-meta {
+      margin-top: 28px;
+      display: flex;
+      gap: 28px;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: var(--line);
+      border-top: 1px solid var(--line-subtle);
+      padding-top: 16px;
+    }
+
+    /* Detail image (72vw, on right, screen blend & radial mask) */
+    .detail-img-wrap {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      width: 72vw;
+      max-width: 1300px;
+      z-index: 6;
+      mix-blend-mode: screen;
+      mask-image: radial-gradient(circle 70% at 65% 50%, black 40%, transparent 85%);
+      -webkit-mask-image: radial-gradient(circle 70% at 65% 50%, black 40%, transparent 85%);
+      clip-path: inset(0 0 0 100%);
+      transition: clip-path 1.7s var(--ease);
+      pointer-events: auto;
+    }
+    .detail-img-wrap.wiped-in {
+      clip-path: inset(0 0 0 0%);
+    }
+    .detail-img-wrap.wiped-out {
+      clip-path: inset(0 100% 0 0%);
+    }
+    .detail-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Hotspots */
+    .hotspot {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(8, 8, 8, 0.85);
+      border: 1px solid var(--lime);
+      color: var(--lime);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      cursor: pointer;
+      z-index: 15;
+      transform: scale(0);
+      transition: transform 0.4s var(--spring);
+    }
+    .hotspot.visible {
+      transform: scale(1);
+    }
+    .hotspot::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1px solid var(--lime);
+      animation: hotspotPing 2.2s infinite cubic-bezier(0, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    @keyframes hotspotPing {
+      0% { transform: scale(0.7); opacity: 1; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+
+    .hotspot-card {
+      position: absolute;
+      top: 42px;
+      left: 0;
+      width: 270px;
+      padding: 18px;
+      background: rgba(12, 12, 12, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(198, 255, 61, 0.3);
+      border-left: 2px solid var(--lime);
+      color: var(--txt);
+      clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+      transition: clip-path 0.45s var(--out);
+      pointer-events: none;
+      z-index: 25;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+    }
+    .hotspot:hover .hotspot-card,
+    .hotspot.active .hotspot-card {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      pointer-events: auto;
+    }
+    .hotspot-title {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--lime);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .hotspot-body {
+      font-size: 10px;
+      line-height: 1.6;
+      color: var(--mute);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* Hotspot positions on detail image */
+    .hotspot-1 { top: 38%; left: 42%; }
+    .hotspot-2 { top: 32%; left: 64%; }
+    .hotspot-3 { top: 48%; left: 78%; }
+
+    /* =========================================================
+       6. SCENE 3 — QUICK FACTS
+       ========================================================= */
+    #scene-quickfacts {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #scene-quickfacts.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .blob-video-wrap {
+      position: absolute;
+      top: 41%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(96vw, 1700px);
+      aspect-ratio: 16 / 9;
+      mix-blend-mode: screen;
+      z-index: 6;
+      pointer-events: none;
+    }
+    #blob-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* 3 Icons overlay at 27%, 50%, 73% width, 48% height */
+    .blob-lobes-container {
+      position: absolute;
+      top: 41%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(96vw, 1700px);
+      aspect-ratio: 16 / 9;
+      z-index: 8;
+      pointer-events: auto;
+    }
+    .lobe-item {
+      position: absolute;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+    }
+    .lobe-item-1 { left: 27%; }
+    .lobe-item-2 { left: 50%; top: 51%; } /* lower as specified */
+    .lobe-item-3 { left: 73%; }
+
+    .lobe-icon-wrap {
+      width: 58px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(-3px 0 rgba(255, 0, 0, 0.85)) drop-shadow(3px 0 rgba(0, 229, 255, 0.85));
+      transform: scale(0) rotate(-40deg);
+      opacity: 0;
+      transition: transform 0.65s var(--spring), opacity 0.65s var(--ease);
+    }
+    .lobe-icon-wrap.popped {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    .lobe-icon-wrap:hover {
+      transform: scale(1.22) skewX(-14deg);
+      filter: drop-shadow(-5px 0 rgba(255, 0, 0, 1)) drop-shadow(5px 0 rgba(0, 229, 255, 1));
+    }
+    .lobe-icon-wrap svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .lobe-label {
+      text-align: center;
+      line-height: 1.2;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+    .lobe-icon-wrap.popped + .lobe-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .lobe-key {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: var(--mute);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .lobe-val {
+      font-size: clamp(18px, 2.2vw, 28px);
+      font-weight: 800;
+      color: var(--txt);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    /* Marquee strip at 76% */
+    .quickfacts-marquee-wrap {
+      position: absolute;
+      top: 76%;
+      left: 0;
+      width: 100vw;
+      overflow: hidden;
+      mix-blend-mode: screen;
+      z-index: 7;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    }
+    .quickfacts-track {
+      display: flex;
+      width: max-content;
+      will-change: transform;
+    }
+    .quickfacts-img {
+      height: min(34vh, 20vw);
+      width: auto;
+      margin-top: calc(min(34vh, 20vw) * -0.22);
+      margin-bottom: calc(min(34vh, 20vw) * -0.25);
+      flex-shrink: 0;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* =========================================================
+       7. SCENE 4 — OUTRO
+       ========================================================= */
+    #scene-outro {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s var(--ease);
+    }
+    #scene-outro.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* 12 black vertical slice bars collapsing on entry */
+    .slice-container {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      z-index: 70;
+      pointer-events: none;
+    }
+    .slice-bar {
+      flex: 1;
+      height: 100%;
+      background: #000;
+      transform-origin: center;
+      transform: scaleY(0);
+      will-change: transform;
+    }
+
+    .logo-video-wrap {
+      position: absolute;
+      top: 42%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(92vw, 1500px);
+      aspect-ratio: 16 / 9;
+      mix-blend-mode: screen;
+      z-index: 6;
+      pointer-events: none;
+    }
+    #logo-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .outro-content {
+      position: absolute;
+      bottom: 12vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      z-index: 10;
+      text-align: center;
+    }
+    .outro-headline {
+      font-size: clamp(24px, 4.4vw, 64px);
+      font-weight: 800;
+      color: var(--txt);
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      text-transform: uppercase;
+      text-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+    }
+    .outro-btn-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .outro-preorder-btn {
+      padding: 14px 34px;
+      border-radius: 999px;
+      background: var(--lime);
+      color: #000;
+      border: 1px solid var(--lime);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.35s var(--out);
+      box-shadow: 0 0 24px rgba(198, 255, 61, 0.35);
+    }
+    .outro-preorder-btn:hover {
+      transform: scale(1.05);
+      background: #fff;
+      border-color: #fff;
+      box-shadow: 0 0 35px rgba(255, 255, 255, 0.5);
+    }
+    .outro-explore-btn {
+      padding: 14px 28px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--txt);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.35s var(--out);
+    }
+    .outro-explore-btn:hover {
+      border-color: var(--lime);
+      color: var(--lime);
+      background: rgba(198, 255, 61, 0.05);
+    }
+
+    /* =========================================================
+       8. PRE-ORDER PANEL & TOAST
+       ========================================================= */
+    #preorder-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: circle(0% at var(--click-x, 50%) var(--click-y, 50%));
+      transition: clip-path 0.7s var(--out);
+      pointer-events: none;
+    }
+    #preorder-modal.open {
+      clip-path: circle(160% at var(--click-x, 50%) var(--click-y, 50%));
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      width: min(92vw, 540px);
+      background: #080808;
+      border: 1px solid var(--line);
+      padding: clamp(28px, 4vw, 44px);
+      border-radius: 20px;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(198, 255, 61, 0.08);
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--mute);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .modal-close-btn:hover {
+      color: var(--lime);
+      border-color: var(--lime);
+    }
+
+    .modal-model-title {
+      font-size: clamp(26px, 3.2vw, 38px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .modal-model-sub {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      color: var(--lime);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .chips-group {
+      margin-bottom: 24px;
+    }
+    .chips-label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: var(--mute);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .chip {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--txt);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .chip:hover {
+      border-color: var(--lime);
+      color: var(--lime);
+    }
+    .chip.active {
+      border-color: var(--lime);
+      background: var(--lime);
+      color: #000;
+      font-weight: 600;
+      box-shadow: 0 0 16px rgba(198, 255, 61, 0.3);
+    }
+
+    .modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 34px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+    .modal-price {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--txt);
+      letter-spacing: -0.02em;
+    }
+    .modal-reserve-btn {
+      padding: 12px 28px;
+      border-radius: 999px;
+      background: var(--lime);
+      color: #000;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s var(--out);
+    }
+    .modal-reserve-btn:hover {
+      background: #fff;
+      transform: scale(1.05);
+    }
+
+    /* Toast notification */
+    #toast {
+      position: fixed;
+      bottom: 74px;
+      left: 50%;
+      transform: translate(-50%, 40px);
+      opacity: 0;
+      padding: 10px 22px;
+      background: var(--lime);
+      color: #000;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(198, 255, 61, 0.5);
+      z-index: 300;
+      pointer-events: none;
+      transition: all 0.4s var(--spring);
+    }
+    #toast.show {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+
+    /* Custom Cursor */
+    #custom-cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid var(--lime);
+      background: transparent;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s var(--out), height 0.25s var(--out), background 0.25s var(--out), border-color 0.25s var(--out);
+    }
+    #custom-cursor.hovered {
+      width: 44px;
+      height: 44px;
+      background: rgba(198, 255, 61, 0.15);
+      border-color: var(--lime);
+    }
+    #custom-cursor.rec-mode {
+      width: 52px;
+      height: 52px;
+      border: 2px solid #ff3344;
+      background: rgba(255, 51, 68, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #custom-cursor.rec-mode::after {
+      content: '● REC 60FPS';
+      position: absolute;
+      top: -18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      color: #ff3344;
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       9. EXTENDED MULTI-PRODUCT CATALOGUE & SHOWROOM
+       (Requested: comprehensive, animated, rich products & pages)
+       ========================================================= */
+    #catalogue-drawer {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #000;
+      z-index: 150;
+      transform: translateY(100%);
+      transition: transform 0.85s var(--ease);
+      padding: clamp(70px, 10vh, 100px) 4vw 80px 4vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #catalogue-drawer.open {
+      transform: translateY(0);
+    }
+
+    .catalogue-header {
+      width: 100%;
+      max-width: 1300px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .cat-title-block h2 {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .cat-title-block p {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--mute);
+      text-transform: uppercase;
+    }
+
+    .cat-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 14px;
+    }
+    .cat-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .cat-tab-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: none;
+      color: var(--mute);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .cat-tab-btn:hover {
+      color: var(--txt);
+      border-color: var(--txt);
+    }
+    .cat-tab-btn.active {
+      color: #000;
+      background: var(--lime);
+      border-color: var(--lime);
+      font-weight: 600;
+    }
+
+    .cat-close-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--lime);
+      color: var(--lime);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .cat-close-pill:hover {
+      background: var(--lime);
+      color: #000;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      width: 100%;
+      max-width: 1300px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 28px;
+      margin-bottom: 50px;
+    }
+
+    /* Product Card with 3D Tilt */
+    .product-card {
+      background: #090909;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.4s, transform 0.2s cubic-bezier(0.2, 0, 0.4, 1), box-shadow 0.4s;
+      transform-style: preserve-3d;
+    }
+    .product-card:hover {
+      border-color: var(--lime);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(198, 255, 61, 0.1);
+    }
+    .product-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle 250px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(198, 255, 61, 0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card-badge {
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--lime);
+      text-transform: uppercase;
+      border: 1px solid rgba(198, 255, 61, 0.3);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .card-weight {
+      font-size: 10px;
+      color: var(--mute);
+      letter-spacing: 0.08em;
+    }
+
+    /* Vector/Render Graphic Container */
+    .card-visual {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .card-visual svg {
+      width: 90%;
+      height: 90%;
+      transition: transform 0.4s var(--out);
+    }
+    .product-card:hover .card-visual svg {
+      transform: scale(1.08) rotate(-1deg);
+    }
+
+    .card-info h3 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .card-info .card-tagline {
+      font-size: 10px;
+      color: var(--mute);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .card-swatches {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    .card-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .card-swatch:hover {
+      transform: scale(1.3);
+    }
+
+    .card-specs {
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: var(--mute);
+      line-height: 1.6;
+      border-top: 1px solid var(--line-subtle);
+      padding-top: 10px;
+      margin-bottom: 18px;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--line-subtle);
+      padding-top: 14px;
+    }
+    .card-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--txt);
+    }
+    .card-btns {
+      display: flex;
+      gap: 8px;
+    }
+    .card-quick-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--mute);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .card-quick-btn:hover {
+      color: var(--txt);
+      border-color: var(--txt);
+    }
+    .card-buy-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--lime);
+      border: none;
+      color: #000;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .card-buy-btn:hover {
+      background: #fff;
+    }
+
+    /* Pagination controls */
+    .cat-pagination {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--mute);
+    }
+    .page-btn {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: none;
+      color: var(--txt);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .page-btn:hover:not(:disabled) {
+      border-color: var(--lime);
+      color: var(--lime);
+    }
+    .page-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Modal for Quick View Specs */
+    #quickview-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 210;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--out);
+    }
+    #quickview-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .quickview-card {
+      width: min(92vw, 680px);
+      max-height: 85vh;
+      overflow-y: auto;
+      background: #090909;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: clamp(24px, 4vw, 40px);
+      position: relative;
+    }
+
+    /* Info / About Overlays */
+    .info-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--out);
+    }
+    .info-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .info-card {
+      width: min(92vw, 620px);
+      max-height: 85vh;
+      overflow-y: auto;
+      background: #090909;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: clamp(28px, 4vw, 44px);
+      position: relative;
+    }
+
+    /* =========================================================
+       10. RESPONSIVE (<=760px)
+       ========================================================= */
+    @media (max-width: 760px) {
+      /* Hide nav, clock, dot, welcome text, corner captions */
+      .header-nav,
+      .header-welcome,
+      .clock-block,
+      .live-dot-wrap,
+      .top-corner {
+        display: none !important;
+      }
+
+      /* Glasses 150vw, plinth 170vw, blob 150vw */
+      .glasses-wrap {
+        width: 150vw !important;
+        top: calc(66vh - 12vw) !important;
+      }
+      .plinth-wrap {
+        width: 170vw !important;
+        top: calc(66vh - 42vw) !important;
+      }
+      .blob-video-wrap {
+        width: 150vw !important;
+      }
+      .blob-lobes-container {
+        width: 150vw !important;
+      }
+
+      /* Detail image moves below copy */
+      .detail-copy-wrap {
+        width: 88vw;
+        left: 6vw;
+        top: 14vh;
+      }
+      .detail-img-wrap {
+        top: 64vh;
+        width: 90vw;
+        right: 5vw;
+      }
+
+      /* Footer keeps date, dashes, coords */
+      footer#site-footer {
+        padding: 0 4px;
+      }
+      .footer-coord {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Stage Glow & Grain -->
+  <div class="stage-glow"></div>
+  <div class="grain-overlay"></div>
+
+  <!-- Hidden SVG definitions & Chroma-Key filters -->
+  <svg width="0" height="0" style="position:absolute;visibility:hidden">
+    <defs>
+      <!-- Chroma key SVG filter fallback -->
+      <filter id="magenta-key">
+        <feColorMatrix type="matrix" values="
+          1  0  0  0  0
+          0  1  0  0  0
+          0  0  1  0  0
+         -1  2 -1  1  0" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Custom Cursor -->
+  <div id="custom-cursor"></div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="font-mono">LENS CALIBRATED // ACID [0°]</div>
+
+  <!-- =========================================================
+       PERSISTENT HEADER
+       ========================================================= -->
+  <header id="site-header">
+    <a href="#" class="header-brand" id="brand-link" aria-label="KYNE AERO.VISION">
+      <svg class="brand-svg" viewBox="0 0 32 32" fill="none">
+        <!-- Two forward-leaning blades: left white with notch, right lime -->
+        <path d="M4 28L14 4H10L2 28H4Z" fill="#F1F3EE"/>
+        <!-- Notch in left blade -->
+        <path d="M7 16L9.5 10H7.5L5 16H7Z" fill="#000"/>
+        <!-- Right blade: lime -->
+        <path d="M16 28L26 4H21L11 28H16Z" fill="#C6FF3D"/>
+      </svg>
+      <span class="brand-name">KYNE AERO.VISION</span>
+    </a>
+
+    <div class="header-welcome font-mono">N.1 • WELCOME TO THE FUTURE</div>
+
+    <nav class="header-nav">
+      <button class="nav-btn font-mono" id="nav-shop">.shop</button>
+      <button class="nav-btn font-mono" id="nav-about">.about</button>
+      <button class="nav-btn font-mono" id="nav-collection">.collection</button>
+      <button class="nav-btn font-mono" id="nav-info">.info</button>
+    </nav>
+
+    <div class="header-right">
+      <div class="clock-block font-mono">
+        <span class="clock-tag">[PRG]</span>
+        <span class="clock-val" id="clock-display">12:00</span>
+      </div>
+
+      <div class="live-dot-wrap" title="Live System Online">
+        <div class="live-dot"></div>
+        <div class="live-ping"></div>
+      </div>
+
+      <button class="preorder-pill font-mono" id="header-preorder-btn">
+        <span>PRE-ORDER</span>
+        <div class="arrow-chip">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M1 5H9M9 5L5.5 1.5M9 5L5.5 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       TOP CORNER CAPTIONS (Slide through .ln masks per scene)
+       ========================================================= -->
+  <div class="top-corner left">
+    <div class="ln">
+      <span class="corner-title" id="corner-left-title">bangers only</span>
+    </div>
+    <div class="ln">
+      <span class="corner-sub font-mono" id="corner-left-sub">IT'S ALWAYS TIME TO ENJOY.</span>
+    </div>
+  </div>
+
+  <div class="top-corner right">
+    <div class="ln">
+      <span class="corner-title" id="corner-right-title">inspired</span>
+    </div>
+    <div class="ln">
+      <span class="corner-sub font-mono" id="corner-right-sub">FROM 10:00 TO 19:00</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       LENS COLOUR SYSTEM PICKER (Bottom Right)
+       ========================================================= -->
+  <div class="lens-picker">
+    <span class="lens-picker-label font-mono">LENS SPECTRUM</span>
+    <div class="lens-orbs">
+      <div class="lens-orb orb-acid active" data-hue="0deg" data-name="acid" title="Acid 0°"></div>
+      <div class="lens-orb orb-ice" data-hue="95deg" data-name="ice" title="Ice 95°"></div>
+      <div class="lens-orb orb-ember" data-hue="-62deg" data-name="ember" title="Ember -62°"></div>
+      <div class="lens-orb orb-ultra" data-hue="175deg" data-name="ultra" title="Ultra 175°"></div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MAIN 100VH 4-SCENE STAGE
+       ========================================================= -->
+  <main id="stage">
+
+    <!-- -------------------------------------------------------
+         SCENE 1: HERO
+         ------------------------------------------------------- -->
+    <!-- 1. Scrolling 3D Wordmark Marquee -->
+    <div class="wordmark-wrap" id="hero-wordmark">
+      <div class="wordmark-track" id="wordmark-track">
+        <img class="wordmark-img" src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_020004_0521c50e-09ca-4e84-8d93-013a72b5adfc.png&w=2400&q=85" alt="KYNE AERO.VISION 3D Wordmark">
+        <img class="wordmark-img" src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_020004_0521c50e-09ca-4e84-8d93-013a72b5adfc.png&w=2400&q=85" alt="KYNE AERO.VISION 3D Wordmark">
+        <img class="wordmark-img" src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_020004_0521c50e-09ca-4e84-8d93-013a72b5adfc.png&w=2400&q=85" alt="KYNE AERO.VISION 3D Wordmark">
+        <img class="wordmark-img" src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_020004_0521c50e-09ca-4e84-8d93-013a72b5adfc.png&w=2400&q=85" alt="KYNE AERO.VISION 3D Wordmark">
+      </div>
+    </div>
+
+    <!-- 2. Neon-rimmed Plinth Podium -->
+    <div class="plinth-wrap lens-hued" id="hero-plinth">
+      <img class="plinth-img" src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_020140_5b58d755-d5de-46b6-b66e-ab16bb461339.png&w=1920&q=85" alt="Glossy black podium with neon lime and cyan rims">
+    </div>
+
+    <!-- 3. Chroma-Keyed WebGL Sunglasses Canvas -->
+    <div class="glasses-wrap lens-hued" id="hero-glasses">
+      <canvas id="glasses-canvas"></canvas>
+      <!-- Fallback video element (hidden by default unless WebGL unsupported) -->
+      <video id="turntable-fallback-video" playsinline muted loop crossOrigin="anonymous"></video>
+    </div>
+
+    <div class="hero-caption font-mono" id="hero-caption">
+      <span class="caption-dot">●</span>
+      <span id="caption-label">HOVER TO SPIN · SCROLL TO EXPLORE</span>
+    </div>
+
+    <!-- -------------------------------------------------------
+         SCENE 2: DETAIL
+         ------------------------------------------------------- -->
+    <section id="scene-detail">
+      <!-- Left Copy -->
+      <div class="detail-copy-wrap" id="detail-copy">
+        <div class="striped-swatch lens-hued"></div>
+        <h2 class="detail-lens-heading">lens.<span class="lime-part">{<span id="lens-name-tag">acid</span>}</span></h2>
+        <p class="detail-desc font-mono">
+          PRECISION-MACHINED SINTERED MAGNESIUM-TITANIUM MONOCOQUE. COATED IN A THREE-PHASE VACUUM DEPOSITION OF HIGH-REFLECTIVE SPECULAR CHROME.
+        </p>
+        <p class="detail-desc font-mono">
+          ADAPTIVE PHOTOCHROMIC LIQUID MATRIX REACTS TO UV AND DYNAMIC SUNLIGHT CONDITIONS WITHIN 5.8 SECONDS. ZERO GLARE. ZERO FATIGUE.
+        </p>
+        <div class="detail-bottom-meta font-mono">
+          <span>CURVE // 8.25 TORIC</span>
+          <span>OPTICS // BASE 8 CENTRED</span>
+        </div>
+      </div>
+
+      <!-- Right Detail Image with Radial Mask -->
+      <div class="detail-img-wrap lens-hued" id="detail-img-wrap">
+        <img class="detail-img" src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_014903_73b0f091-ad2d-4039-8a7a-03a8397b45d0.png&w=1600&q=85" alt="Glasses close up three-quarter view with lime rim light">
+
+        <!-- 3 Hotspots with Frosted Cards -->
+        <div class="hotspot hotspot-1" data-spot="0">
+          <span>+</span>
+          <div class="hotspot-card">
+            <div class="hotspot-title font-mono">[01] PHOTOCHROMIC LENS</div>
+            <div class="hotspot-body font-mono">Hyper-reactive molecular photochromic layer shifts from Category 1 to 4 dynamically in 5.8s. Full UV400 spectrum coverage.</div>
+          </div>
+        </div>
+
+        <div class="hotspot hotspot-2" data-spot="1">
+          <span>+</span>
+          <div class="hotspot-card">
+            <div class="hotspot-title font-mono">[02] LIQUID-CHROME FRAME</div>
+            <div class="hotspot-body font-mono">Sintered magnesium-titanium alloy shell coated in vacuum-deposited specular chrome. Ultra-light, zero fatigue at high Gs.</div>
+          </div>
+        </div>
+
+        <div class="hotspot hotspot-3" data-spot="2">
+          <span>+</span>
+          <div class="hotspot-card">
+            <div class="hotspot-title font-mono">[03] GRIP TEMPLES</div>
+            <div class="hotspot-body font-mono">Hydrophilic micro-textured elastomer grip matrix. Locks progressively tighter as moisture and speed increase.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------
+         SCENE 3: QUICK FACTS
+         ------------------------------------------------------- -->
+    <section id="scene-quickfacts">
+      <!-- Iridescent Soap Bubble Morph Video -->
+      <div class="blob-video-wrap lens-hued-half" id="blob-video-wrap">
+        <video id="blob-video" playsinline muted crossOrigin="anonymous">
+          <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261118_020140_80f218f8-3ea6-4407-b343-db2278462d30.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- 3 Pop-in Lobes at 27%, 50%, 73% -->
+      <div class="blob-lobes-container">
+        <!-- Lobe 1 (27%): Six-petal flower -->
+        <div class="lobe-item lobe-item-1" id="lobe-1">
+          <div class="lobe-icon-wrap" id="lobe-icon-1">
+            <svg viewBox="0 0 48 48">
+              <!-- Six petal geometric flower -->
+              <circle cx="24" cy="24" r="5"/>
+              <path d="M24 19C24 13 28 8 24 4C20 8 24 13 24 19Z"/>
+              <path d="M24 29C24 35 20 40 24 44C28 40 24 35 24 29Z"/>
+              <path d="M28.3 21.5C33.5 18.5 39 17 41.3 21C37.8 23 33.5 21.5 28.3 21.5Z"/>
+              <path d="M19.7 26.5C14.5 29.5 9 31 6.7 27C10.2 25 14.5 26.5 19.7 26.5Z"/>
+              <path d="M28.3 26.5C33.5 29.5 37.8 35 34.3 39C32 35 33.5 29.5 28.3 26.5Z"/>
+              <path d="M19.7 21.5C14.5 18.5 10.2 13 13.7 9C16 13 14.5 18.5 19.7 21.5Z"/>
+            </svg>
+          </div>
+          <div class="lobe-label">
+            <span class="lobe-key font-mono">WEIGHT</span>
+            <span class="lobe-val font-display">.24g</span>
+          </div>
+        </div>
+
+        <!-- Lobe 2 (50%): Faceted crystal drop (lower) -->
+        <div class="lobe-item lobe-item-2" id="lobe-2">
+          <div class="lobe-icon-wrap" id="lobe-icon-2">
+            <svg viewBox="0 0 48 48">
+              <!-- Faceted crystal teardrop -->
+              <polygon points="24,4 36,20 24,44 12,20"/>
+              <line x1="24" y1="4" x2="24" y2="44"/>
+              <line x1="12" y1="20" x2="36" y2="20"/>
+              <line x1="18" y1="12" x2="24" y2="20"/>
+              <line x1="30" y1="12" x2="24" y2="20"/>
+              <line x1="18" y1="32" x2="24" y2="20"/>
+              <line x1="30" y1="32" x2="24" y2="20"/>
+            </svg>
+          </div>
+          <div class="lobe-label">
+            <span class="lobe-key font-mono">LENS</span>
+            <span class="lobe-val font-display" style="font-size: clamp(14px, 1.8vw, 22px);">.photochromic</span>
+          </div>
+        </div>
+
+        <!-- Lobe 3 (73%): Three aerodynamic wave lines -->
+        <div class="lobe-item lobe-item-3" id="lobe-3">
+          <div class="lobe-icon-wrap" id="lobe-icon-3">
+            <svg viewBox="0 0 48 48">
+              <!-- Three aerodynamic laminar wave lines -->
+              <path d="M6 14C14 14 18 10 26 10C34 10 38 14 44 14"/>
+              <path d="M4 24C12 24 16 20 24 20C32 20 36 24 42 24"/>
+              <path d="M8 34C16 34 20 30 28 30C36 30 40 34 46 34"/>
+            </svg>
+          </div>
+          <div class="lobe-label">
+            <span class="lobe-key font-mono">FIT</span>
+            <span class="lobe-val font-display">.wrap</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Facts Marquee Strip at 76% -->
+      <div class="quickfacts-marquee-wrap" id="quickfacts-marquee">
+        <div class="quickfacts-track" id="quickfacts-track">
+          <img class="quickfacts-img" src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_020003_c9e68f16-e6f2-43e8-9459-ba5d9291348d.png&w=2400&q=85" alt="QUICK FACTS Marquee Strip">
+          <img class="quickfacts-img" src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_020003_c9e68f16-e6f2-43e8-9459-ba5d9291348d.png&w=2400&q=85" alt="QUICK FACTS Marquee Strip">
+          <img class="quickfacts-img" src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_020003_c9e68f16-e6f2-43e8-9459-ba5d9291348d.png&w=2400&q=85" alt="QUICK FACTS Marquee Strip">
+        </div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------
+         SCENE 4: OUTRO
+         ------------------------------------------------------- -->
+    <section id="scene-outro">
+      <!-- 12 Black Vertical Slice Bars Collapsing on Entry -->
+      <div class="slice-container" id="slice-container">
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+        <div class="slice-bar"></div>
+      </div>
+
+      <!-- 3D Spinning Lime Logo Video -->
+      <div class="logo-video-wrap lens-hued" id="logo-video-wrap">
+        <video id="logo-video" playsinline muted loop crossOrigin="anonymous">
+          <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261118_020140_b48373e7-a263-431a-b3ef-da6b564f4e03.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Outro Headline and CTA -->
+      <div class="outro-content">
+        <h2 class="outro-headline font-display">SEE IT BEFORE IT HAPPENS.</h2>
+        <div class="outro-btn-wrap">
+          <button class="outro-preorder-btn font-mono" id="outro-preorder-btn">
+            <span>PRE-ORDER · $289</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M1 6H11M11 6L6.5 1.5M11 6L6.5 10.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="outro-explore-btn font-mono" id="outro-explore-btn">
+            <span>EXPLORE ALL MODELS (8) ↓</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       PERSISTENT FOOTER
+       ========================================================= -->
+  <footer id="site-footer">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="color: var(--lime);">✦</span>
+      <span id="live-date">2026.11.22</span>
+    </div>
+
+    <span>+</span>
+
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="footer-dashes">
+        <button class="dash-item active" data-scene="0" aria-label="Hero Scene"></button>
+        <button class="dash-item" data-scene="1" aria-label="Detail Scene"></button>
+        <button class="dash-item" data-scene="2" aria-label="Quick Facts Scene"></button>
+        <button class="dash-item" data-scene="3" aria-label="Outro Scene"></button>
+      </div>
+      <span>©2026 KYNE AERO.VISION</span>
+    </div>
+
+    <span>+</span>
+
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <button class="footer-nav-cue font-mono" id="footer-next-btn">SCROLL · NEXT</button>
+      <span class="footer-coord font-mono">⌜⌟ 50°05′36.2″N 14°26′51.5″E</span>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       PRE-ORDER PANEL (Circular Reveal from click point)
+       ========================================================= -->
+  <div id="preorder-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="modal-close-btn" aria-label="Close Preorder">✕</button>
+
+      <h3 class="modal-model-title font-display" id="modal-target-title">AERO.VISION</h3>
+      <div class="modal-model-sub font-mono" id="modal-target-sub">DROP 01 // 500 PAIRS WORLDWIDE</div>
+
+      <div class="chips-group">
+        <span class="chips-label font-mono">1. SELECT LENS CALIBRATION</span>
+        <div class="chips-row" id="modal-lens-chips">
+          <button class="chip active font-mono" data-hue="0deg" data-name="acid">Acid 0°</button>
+          <button class="chip font-mono" data-hue="95deg" data-name="ice">Ice 95°</button>
+          <button class="chip font-mono" data-hue="-62deg" data-name="ember">Ember -62°</button>
+          <button class="chip font-mono" data-hue="175deg" data-name="ultra">Ultra 175°</button>
+        </div>
+      </div>
+
+      <div class="chips-group">
+        <span class="chips-label font-mono">2. SELECT ERGONOMIC FIT</span>
+        <div class="chips-row" id="modal-fit-chips">
+          <button class="chip font-mono">Narrow</button>
+          <button class="chip active font-mono">Regular</button>
+          <button class="chip font-mono">Wide</button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div>
+          <span style="font-size: 10px; color: var(--mute); display: block; letter-spacing: 0.1em;" class="font-mono">PRICE (TAX INCL.)</span>
+          <span class="modal-price font-display" id="modal-target-price">$289</span>
+        </div>
+        <button class="modal-reserve-btn font-mono" id="modal-confirm-btn">Reserve pair →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       EXTENDED MULTI-PRODUCT CATALOGUE SHOWROOM
+       (Meets Arabic user request for rich animated pages & products)
+       ========================================================= -->
+  <section id="catalogue-drawer">
+    <div class="catalogue-header">
+      <div class="cat-title-block">
+        <h2 class="font-display">AERO ARCHIVE // ECOSYSTEM</h2>
+        <p class="font-mono">8 EXPERIMENTAL CHROME MODELS · ALL-WEATHER HIGH VELOCITY</p>
+      </div>
+
+      <div class="cat-controls">
+        <button class="cat-close-pill font-mono" id="cat-close-btn">↑ RETURN TO LAUNCH SCENE</button>
+        <div class="cat-tabs font-mono" id="cat-category-tabs">
+          <button class="cat-tab-btn active" data-cat="all">ALL ARCHIVE (8)</button>
+          <button class="cat-tab-btn" data-cat="speed">SPEED SERIES (3)</button>
+          <button class="cat-tab-btn" data-cat="chrome">LIQUID CHROME (3)</button>
+          <button class="cat-tab-btn" data-cat="lab">LAB PROTO (2)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Cards Grid -->
+    <div class="product-grid" id="product-grid">
+      <!-- Generated via JS for 8 products with rich data & 3D tilt -->
+    </div>
+
+    <!-- Pagination -->
+    <div class="cat-pagination font-mono">
+      <button class="page-btn" id="cat-prev-btn" disabled>← PREV</button>
+      <span id="cat-page-indicator">PAGE 01 / 02</span>
+      <button class="page-btn" id="cat-next-btn">NEXT →</button>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       QUICK VIEW & TECHNICAL MODAL
+       ========================================================= -->
+  <div id="quickview-modal">
+    <div class="quickview-card">
+      <button class="modal-close-btn" id="qv-close-btn">✕</button>
+      <div id="qv-content">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT MODAL -->
+  <div class="info-modal" id="about-modal">
+    <div class="info-card">
+      <button class="modal-close-btn" id="about-close-btn">✕</button>
+      <h3 class="font-display" style="font-size: 26px; margin-bottom: 12px;">KYNE OPTICS LAB</h3>
+      <p class="font-mono" style="font-size: 11px; color: var(--lime); margin-bottom: 20px;">BIO-CYBERNETIC SPEED ARCHITECTURE</p>
+      <p style="font-size: 13px; line-height: 1.8; color: var(--mute); margin-bottom: 16px;">
+        KYNE was established in 2026 at the intersection of competitive aerodynamics, advanced laser sintering, and photochromic molecular physics. Every frame is balanced to sub-gram tolerances and vacuum-shielded against extreme atmospheric shear.
+      </p>
+      <p style="font-size: 13px; line-height: 1.8; color: var(--mute); margin-bottom: 24px;">
+        Tested over 2,400 km of mountain descents and velodrome high-cadence runs in Prague, Innsbruck, and California. Built for athletes who demand total temporal clarity: see it before it happens.
+      </p>
+      <div style="border-top: 1px solid var(--line); padding-top: 16px; display: flex; justify-content: space-between;" class="font-mono">
+        <span style="font-size: 10px; color: var(--mute);">STUDIO // PRAGUE, CZ</span>
+        <span style="font-size: 10px; color: var(--lime);">STATUS // ACTIVE DEPLOYMENT</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO & TECH SPECS MODAL -->
+  <div class="info-modal" id="info-modal">
+    <div class="info-card">
+      <button class="modal-close-btn" id="info-close-btn">✕</button>
+      <h3 class="font-display" style="font-size: 26px; margin-bottom: 12px;">SPECIFICATIONS & CARE</h3>
+      <p class="font-mono" style="font-size: 11px; color: var(--lime); margin-bottom: 20px;">TECHNICAL DATA SHEET</p>
+      <div class="font-mono" style="font-size: 11px; line-height: 2; color: var(--mute); border-top: 1px solid var(--line); padding-top: 14px;">
+        <div style="display: flex; justify-content: space-between;"><span>FRAME ALLOY</span> <span style="color: var(--txt);">Sintered Ti-Mg Monocoque</span></div>
+        <div style="display: flex; justify-content: space-between;"><span>BASE CURVATURE</span> <span style="color: var(--txt);">8.25 Toric Decentered</span></div>
+        <div style="display: flex; justify-content: space-between;"><span>VLT TRANSMISSION</span> <span style="color: var(--txt);">12% - 85% (Photochromic)</span></div>
+        <div style="display: flex; justify-content: space-between;"><span>BALLISTIC CERTIFICATION</span> <span style="color: var(--txt);">ANSI Z87.1+ / EN 166</span></div>
+        <div style="display: flex; justify-content: space-between;"><span>GLOBAL WARRANTY</span> <span style="color: var(--txt);">Lifetime Hardware Guarantee</span></div>
+        <div style="display: flex; justify-content: space-between;"><span>WORLDWIDE SHIPPING</span> <span style="color: var(--lime);">Express Tracked · Free Returns</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       JAVASCRIPT: WEBGL CHROMA-KEY SHADER & SCENE CONTROLLER
+       ========================================================= -->
+  <script>
+    /* =========================================================
+       A. WEBGL CHROMA-KEY SHADER ENGINE
+       ========================================================= */
+    const canvas = document.getElementById('glasses-canvas');
+    let gl = null;
+    let shaderProgram = null;
+    let videoTexture = null;
+    let turntableVideo = null;
+    let posterImg = null;
+    let posterLoaded = false;
+    let isVideoPlaying = false;
+
+    // WebGL Vertex Shader
+    const vsSource = `
+      attribute vec2 aPos;
+      attribute vec2 aUv;
+      varying vec2 vUv;
+      void main() {
+        vUv = aUv;
+        gl_Position = vec4(aPos, 0.0, 1.0);
+      }
+    `;
+
+    // Magenta Chroma-Key Fragment Shader (Matching exact prompt formula)
+    const fsSource = `
+      precision mediump float;
+      varying vec2 vUv;
+      uniform sampler2D uTex;
+
+      void main() {
+        vec4 c = texture2D(uTex, vUv);
+        // Distance calculation: min(R, B) - G
+        float d = min(c.r, c.b) - c.g;
+        // Alpha feathering with smoothstep
+        float a = 1.0 - smoothstep(0.10, 0.36, d);
+        // De-spill correction
+        float sp = max(0.0, min(c.r, c.b) - c.g);
+        c.r -= sp * 0.92;
+        c.b -= sp * 0.92;
+        // Premultiplied alpha output
+        c.rgb *= a;
+        gl_FragColor = vec4(c.rgb, a);
+      }
+    `;
+
+    function initWebGL() {
+      try {
+        gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true });
+        if (!gl) {
+          console.warn('WebGL not supported, falling back to CSS blend');
+          setupFallbackVideo();
+          return;
+        }
+
+        // Compile shaders
+        const vs = compileShader(gl, vsSource, gl.VERTEX_SHADER);
+        const fs = compileShader(gl, fsSource, gl.FRAGMENT_SHADER);
+        shaderProgram = gl.createProgram();
+        gl.attachShader(shaderProgram, vs);
+        gl.attachShader(shaderProgram, fs);
+        gl.linkProgram(shaderProgram);
+
+        if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+          console.error('Shader link error:', gl.getProgramInfoLog(shaderProgram));
+          return;
+        }
+
+        gl.useProgram(shaderProgram);
+
+        // Quad geometry
+        const posBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+          -1, -1,
+           1, -1,
+          -1,  1,
+          -1,  1,
+           1, -1,
+           1,  1
+        ]), gl.STATIC_DRAW);
+
+        const posLoc = gl.getAttribLocation(shaderProgram, 'aPos');
+        gl.enableVertexAttribArray(posLoc);
+        gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+        // UV texture coordinates (inverted Y for video)
+        const uvBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+          0, 1,
+          1, 1,
+          0, 0,
+          0, 0,
+          1, 1,
+          1, 0
+        ]), gl.STATIC_DRAW);
+
+        const uvLoc = gl.getAttribLocation(shaderProgram, 'aUv');
+        gl.enableVertexAttribArray(uvLoc);
+        gl.vertexAttribPointer(uvLoc, 2, gl.FLOAT, false, 0, 0);
+
+        // Texture setup
+        videoTexture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, videoTexture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+        // Placeholder 1x1 magenta pixel
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 255, 255]));
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        loadAssetsAndStart();
+      } catch (err) {
+        console.warn('WebGL init caught error:', err);
+        setupFallbackVideo();
+      }
+    }
+
+    function compileShader(gl, src, type) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        console.error('Shader compile error:', gl.getShaderInfoLog(s));
+      }
+      return s;
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = (rect.width || 800) * dpr;
+      canvas.height = (rect.height || 450) * dpr;
+      if (gl) gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+
+    function loadAssetsAndStart() {
+      // 1. Keyed poster still (keyed until video plays)
+      posterImg = new Image();
+      posterImg.crossOrigin = 'anonymous';
+      posterImg.src = 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261118_014952_332a14ea-9b7d-4045-9036-9368eaf90eac.png&w=1920&q=85';
+      posterImg.onload = () => {
+        posterLoaded = true;
+      };
+
+      // 2. Turntable 360 video
+      turntableVideo = document.createElement('video');
+      turntableVideo.crossOrigin = 'anonymous';
+      turntableVideo.src = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261118_015024_006266ee-7f2e-429b-9805-fe43b2d834fe.mp4';
+      turntableVideo.loop = true;
+      turntableVideo.muted = true;
+      turntableVideo.autoplay = true;
+      turntableVideo.playsInline = true;
+
+      turntableVideo.play().then(() => {
+        isVideoPlaying = true;
+      }).catch(() => {
+        // Autoplay may need user gesture
+        window.addEventListener('click', () => {
+          turntableVideo.play();
+          isVideoPlaying = true;
+        }, { once: true });
+      });
+
+      requestAnimationFrame(renderGLFrame);
+    }
+
+    function renderGLFrame() {
+      if (gl && shaderProgram) {
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        let source = null;
+        if (turntableVideo && turntableVideo.readyState >= 2 && !turntableVideo.paused) {
+          source = turntableVideo;
+        } else if (posterLoaded && posterImg) {
+          source = posterImg;
+        }
+
+        if (source) {
+          try {
+            gl.bindTexture(gl.TEXTURE_2D, videoTexture);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+          } catch (e) {
+            // CORS error on tainted texture
+            setupFallbackVideo();
+            return;
+          }
+        }
+      }
+      requestAnimationFrame(renderGLFrame);
+    }
+
+    function setupFallbackVideo() {
+      const fbVideo = document.getElementById('turntable-fallback-video');
+      if (fbVideo) {
+        fbVideo.src = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261118_015024_006266ee-7f2e-429b-9805-fe43b2d834fe.mp4';
+        fbVideo.style.display = 'block';
+        fbVideo.play().catch(() => {});
+        canvas.style.display = 'none';
+      }
+    }
+
+    /* =========================================================
+       B. SCENE CONTROLLER & TIMED TRANSITION LOCKING
+       ========================================================= */
+    const sceneAnchors = [0, 0.45, 0.79, 1.0];
+    let currentScene = 0; // 0, 1, 2, 3
+    let PV = 0; // Progress value (0 to 1)
+    let isLocked = false;
+    let tweenRaf = null;
+
+    const cornerData = [
+      {
+        leftTitle: "bangers only",
+        leftSub: "IT'S ALWAYS TIME TO ENJOY.",
+        rightTitle: "inspired",
+        rightSub: "FROM 10:00 TO 19:00"
+      },
+      {
+        leftTitle: "detail.{01}",
+        leftSub: "LOOK CLOSER. HOVER THE POINTS.",
+        rightTitle: "built light",
+        rightSub: "24 GRAMS OF CHROME"
+      },
+      {
+        leftTitle: "quick facts",
+        leftSub: "THE NUMBERS THAT MATTER.",
+        rightTitle: "tested",
+        rightSub: "2,400 KM OF RIDES"
+      },
+      {
+        leftTitle: "ready?",
+        leftSub: "DROP 01 · 500 PAIRS WORLDWIDE.",
+        rightTitle: "ships",
+        rightSub: "JUNE 2026 FREE RETURNS"
+      }
+    ];
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function goToScene(targetScene) {
+      if (targetScene < 0 || targetScene >= sceneAnchors.length) return;
+      if (isLocked) return;
+
+      const isMultiJump = Math.abs(targetScene - currentScene) > 1;
+      const duration = isMultiJump ? 2200 : 1700; // 1.7s single step, 2.2s multi-scene jump
+
+      const startPV = PV;
+      const endPV = sceneAnchors[targetScene];
+      const startTime = performance.now();
+
+      isLocked = true;
+      currentScene = targetScene;
+
+      updateDashes(currentScene);
+      updateCornerLines(currentScene);
+
+      // Lock extensions & scene entries
+      let extraLock = 0;
+      if (targetScene === 2) {
+        // Quick facts extends lock by 5.4s for morph and icons
+        extraLock = 5400;
+        const blobVid = document.getElementById('blob-video');
+        if (blobVid) {
+          blobVid.currentTime = 0;
+          blobVid.play().catch(() => {});
+        }
+        resetLobeIcons();
+      }
+
+      if (targetScene === 3) {
+        // Outro slice transition
+        triggerSliceCollapse();
+        const logoVid = document.getElementById('logo-video');
+        if (logoVid) {
+          logoVid.currentTime = 0;
+          logoVid.play().catch(() => {});
+        }
+      }
+
+      if (tweenRaf) cancelAnimationFrame(tweenRaf);
+
+      function step(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeInOutCubic(progress);
+
+        PV = startPV + (endPV - startPV) * eased;
+        applyChoreography(PV, progress < 1);
+
+        if (progress < 1) {
+          tweenRaf = requestAnimationFrame(step);
+        } else {
+          PV = endPV;
+          applyChoreography(PV, false);
+          setTimeout(() => {
+            isLocked = false;
+          }, 150 + extraLock);
+        }
+      }
+
+      tweenRaf = requestAnimationFrame(step);
+    }
+
+    function applyChoreography(pv, isTweening) {
+      const heroWordmark = document.getElementById('hero-wordmark');
+      const heroPlinth = document.getElementById('hero-plinth');
+      const heroGlasses = document.getElementById('hero-glasses');
+      const heroCaption = document.getElementById('hero-caption');
+
+      const sceneDetail = document.getElementById('scene-detail');
+      const detailImgWrap = document.getElementById('detail-img-wrap');
+      const detailCopy = document.getElementById('detail-copy');
+
+      const sceneQuickfacts = document.getElementById('scene-quickfacts');
+      const blobWrap = document.getElementById('blob-video-wrap');
+
+      const sceneOutro = document.getElementById('scene-outro');
+
+      // Marquee speed boost during transitions
+      marqueeSpeedMultiplier = isTweening ? 3.6 : 1.0;
+
+      // 1. HERO ELEMENTS (PV 0.0 -> 0.45)
+      if (pv <= 0.45) {
+        const p = pv / 0.45;
+        // Wordmark lifts and clips away
+        heroWordmark.style.transform = `translateY(${-p * 50}vh)`;
+        heroWordmark.style.opacity = `${Math.max(0, 1 - p * 1.5)}`;
+
+        // Plinth sinks 55vh
+        heroPlinth.style.transform = `translateX(-50%) translateY(${p * 55}vh)`;
+        heroPlinth.style.opacity = `${Math.max(0, 1 - p * 1.6)}`;
+
+        // Glasses slide right, grow, clip out from right
+        heroGlasses.style.transform = `translate(calc(-50% + ${p * 60}vw), -50%) scale(${1 + p * 0.28})`;
+        heroGlasses.style.clipPath = `inset(0 0 0 ${p * 100}%)`;
+        heroGlasses.style.opacity = `${Math.max(0, 1 - p * 1.4)}`;
+        if (heroCaption) heroCaption.style.opacity = `${Math.max(0, 1 - p * 2)}`;
+      } else {
+        heroWordmark.style.opacity = '0';
+        heroPlinth.style.opacity = '0';
+        heroGlasses.style.opacity = '0';
+        if (heroCaption) heroCaption.style.opacity = '0';
+      }
+
+      // 2. DETAIL SCENE (PV 0.45)
+      if (pv > 0.15 && pv < 0.75) {
+        sceneDetail.classList.add('active');
+        if (pv <= 0.45) {
+          const enterP = (pv - 0.15) / 0.30;
+          detailImgWrap.style.clipPath = `inset(0 ${Math.max(0, 100 - enterP * 100)}% 0 0)`;
+          detailCopy.style.opacity = `${enterP}`;
+          detailCopy.style.transform = `translateY(${(1 - enterP) * 25}px)`;
+        } else {
+          const exitP = (pv - 0.45) / 0.30;
+          detailImgWrap.style.clipPath = `inset(0 0 0 ${Math.min(100, exitP * 100)}%)`;
+          detailCopy.style.opacity = `${Math.max(0, 1 - exitP * 1.3)}`;
+          detailCopy.style.transform = `translateY(${-exitP * 25}px)`;
+        }
+
+        // Hotspots visible around pv = 0.45
+        const isNearAnchor1 = Math.abs(pv - 0.45) < 0.08;
+        document.querySelectorAll('.hotspot').forEach(h => {
+          if (isNearAnchor1) h.classList.add('visible');
+          else h.classList.remove('visible');
+        });
+      } else {
+        sceneDetail.classList.remove('active');
+        document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('visible'));
+      }
+
+      // 3. QUICK FACTS SCENE (PV 0.79)
+      if (pv > 0.50 && pv < 0.95) {
+        sceneQuickfacts.classList.add('active');
+        if (pv <= 0.79) {
+          const enterP = Math.min(1, Math.max(0, (pv - 0.50) / 0.29));
+          sceneQuickfacts.style.opacity = `${enterP}`;
+          blobWrap.style.transform = `translate(-50%, -50%) scale(${0.8 + enterP * 0.2})`;
+        } else {
+          // Exit: bubble closes to horizontal slit and clips away
+          const exitP = (pv - 0.79) / 0.16;
+          blobWrap.style.transform = `translate(-50%, -50%) scaleY(${Math.max(0, 1 - exitP)})`;
+          sceneQuickfacts.style.opacity = `${Math.max(0, 1 - exitP * 1.5)}`;
+        }
+      } else {
+        sceneQuickfacts.classList.remove('active');
+      }
+
+      // 4. OUTRO SCENE (PV 1.0)
+      if (pv > 0.85) {
+        sceneOutro.classList.add('active');
+        const enterP = (pv - 0.85) / 0.15;
+        sceneOutro.style.opacity = `${enterP}`;
+      } else {
+        sceneOutro.classList.remove('active');
+      }
+    }
+
+    /* Top corners transition through .ln masks */
+    let cornerTimeouts = [];
+    function updateCornerLines(sceneIdx) {
+      cornerTimeouts.forEach(clearTimeout);
+      cornerTimeouts = [];
+
+      const lTitle = document.getElementById('corner-left-title');
+      const lSub = document.getElementById('corner-left-sub');
+      const rTitle = document.getElementById('corner-right-title');
+      const rSub = document.getElementById('corner-right-sub');
+
+      const data = cornerData[sceneIdx] || cornerData[0];
+      const items = [lTitle, lSub, rTitle, rSub];
+
+      items.forEach(el => {
+        el.style.transform = 'translateY(-120%)';
+        el.style.opacity = '0';
+      });
+
+      const t1 = setTimeout(() => {
+        lTitle.textContent = data.leftTitle;
+        lSub.textContent = data.leftSub;
+        rTitle.textContent = data.rightTitle;
+        rSub.textContent = data.rightSub;
+
+        items.forEach(el => {
+          el.style.transition = 'none';
+          el.style.transform = 'translateY(120%)';
+          el.style.opacity = '0';
+        });
+
+        void lTitle.offsetHeight; // reflow
+
+        const t2 = setTimeout(() => {
+          items.forEach(el => {
+            el.style.transition = 'transform 0.6s var(--out), opacity 0.6s var(--out)';
+            el.style.transform = 'translateY(0)';
+            el.style.opacity = '1';
+          });
+        }, 30);
+        cornerTimeouts.push(t2);
+      }, 350);
+      cornerTimeouts.push(t1);
+    }
+
+    function updateDashes(sceneIdx) {
+      document.querySelectorAll('.dash-item').forEach((dash, idx) => {
+        if (idx === sceneIdx) dash.classList.add('active');
+        else dash.classList.remove('active');
+      });
+    }
+
+    /* Outro 12 vertical slice bars collapse cleanly staggered from center */
+    function triggerSliceCollapse() {
+      const bars = document.querySelectorAll('.slice-bar');
+      bars.forEach(b => {
+        b.style.transition = 'none';
+        b.style.transform = 'scaleY(1)';
+      });
+
+      void document.body.offsetHeight; // reflow
+
+      const center = 5.5;
+      bars.forEach((b, i) => {
+        const dist = Math.abs(i - center);
+        const delay = dist * 42; // ms
+        b.style.transition = `transform 0.8s var(--out) ${delay}ms`;
+        b.style.transform = 'scaleY(0)';
+      });
+    }
+
+    /* Bubble morph timing and icon triggers */
+    const blobVideo = document.getElementById('blob-video');
+    const lobeIcons = [
+      document.getElementById('lobe-icon-1'),
+      document.getElementById('lobe-icon-2'),
+      document.getElementById('lobe-icon-3')
+    ];
+
+    function resetLobeIcons() {
+      lobeIcons.forEach(icon => {
+        if (icon) icon.classList.remove('popped');
+      });
+    }
+
+    if (blobVideo) {
+      blobVideo.addEventListener('timeupdate', () => {
+        if (currentScene !== 2) return;
+        const t = blobVideo.currentTime;
+
+        // Icons pop in as each lobe forms (t >= 3.7s, staggered by 0.15s)
+        if (t >= 3.7 && lobeIcons[0] && !lobeIcons[0].classList.contains('popped')) {
+          lobeIcons[0].classList.add('popped');
+        }
+        if (t >= 3.85 && lobeIcons[1] && !lobeIcons[1].classList.contains('popped')) {
+          lobeIcons[1].classList.add('popped');
+        }
+        if (t >= 4.0 && lobeIcons[2] && !lobeIcons[2].classList.contains('popped')) {
+          lobeIcons[2].classList.add('popped');
+        }
+
+        // Hold last frame
+        if (t >= 4.9) {
+          blobVideo.pause();
+        }
+      });
+    }
+
+    /* =========================================================
+       C. WHEEL, KEYBOARD & TOUCH INPUT LOCKING
+       ========================================================= */
+    let accumulatedDelta = 0;
+    let isCatalogueOpen = false;
+
+    window.addEventListener('wheel', (e) => {
+      if (isCatalogueOpen) return; // standard scrolling inside catalogue
+      e.preventDefault();
+      if (isLocked) return;
+
+      accumulatedDelta += e.deltaY;
+      if (Math.abs(accumulatedDelta) > 40) {
+        if (accumulatedDelta > 0) {
+          // Scroll down -> next scene
+          if (currentScene < 3) {
+            goToScene(currentScene + 1);
+          } else if (currentScene === 3) {
+            // Reached outro: scroll into multi-product archive
+            openCatalogue();
+          }
+        } else {
+          // Scroll up -> previous scene
+          if (currentScene > 0) {
+            goToScene(currentScene - 1);
+          }
+        }
+        accumulatedDelta = 0;
+      }
+    }, { passive: false });
+
+    window.addEventListener('keydown', (e) => {
+      if (isCatalogueOpen) return;
+      if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+        e.preventDefault();
+        if (isLocked) return;
+        if (currentScene < 3) goToScene(currentScene + 1);
+        else if (currentScene === 3) openCatalogue();
+      } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+        e.preventDefault();
+        if (isLocked) return;
+        if (currentScene > 0) goToScene(currentScene - 1);
+      }
+    });
+
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+      if (isCatalogueOpen) return;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      if (isCatalogueOpen || isLocked) return;
+      const touchEndY = e.changedTouches[0].clientY;
+      const delta = touchStartY - touchEndY;
+      if (Math.abs(delta) > 40) {
+        if (delta > 0) {
+          if (currentScene < 3) goToScene(currentScene + 1);
+          else if (currentScene === 3) openCatalogue();
+        } else {
+          if (currentScene > 0) goToScene(currentScene - 1);
+        }
+      }
+    }, { passive: true });
+
+    // Footer dash clicking
+    document.querySelectorAll('.dash-item').forEach(dash => {
+      dash.addEventListener('click', (e) => {
+        const target = parseInt(e.currentTarget.dataset.scene, 10);
+        goToScene(target);
+      });
+    });
+
+    document.getElementById('footer-next-btn').addEventListener('click', () => {
+      if (currentScene < 3) goToScene(currentScene + 1);
+      else openCatalogue();
+    });
+
+    /* =========================================================
+       D. MARQUEE CONTINUOUS SCROLLING & MOUSE LEAN
+       ========================================================= */
+    const wordmarkTrack = document.getElementById('wordmark-track');
+    const quickfactsTrack = document.getElementById('quickfacts-track');
+    let marqueeX = 0;
+    let quickfactsX = 0;
+    let marqueeSpeedMultiplier = 1.0;
+
+    function animateMarquees() {
+      // Wordmark strip width calculation
+      if (wordmarkTrack) {
+        marqueeX -= 1.2 * marqueeSpeedMultiplier;
+        const firstImg = wordmarkTrack.children[0];
+        if (firstImg) {
+          const w = firstImg.offsetWidth;
+          if (marqueeX <= -w) {
+            marqueeX += w;
+          }
+        }
+        const sy = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sy')) || 0;
+        wordmarkTrack.style.transform = `translateX(${marqueeX}px) translateY(${sy * 8}px)`;
+      }
+
+      // Quick facts marquee
+      if (quickfactsTrack) {
+        quickfactsX -= 1.6 * marqueeSpeedMultiplier;
+        const qImg = quickfactsTrack.children[0];
+        if (qImg) {
+          const qw = qImg.offsetWidth;
+          if (quickfactsX <= -qw) {
+            quickfactsX += qw;
+          }
+        }
+        quickfactsTrack.style.transform = `translateX(${quickfactsX}px)`;
+      }
+
+      requestAnimationFrame(animateMarquees);
+    }
+    requestAnimationFrame(animateMarquees);
+
+    // Mouse tilt & glasses lean
+    window.addEventListener('mousemove', (e) => {
+      const sx = (e.clientX / window.innerWidth - 0.5) * 2;
+      const sy = (e.clientY / window.innerHeight - 0.5) * 2;
+      document.documentElement.style.setProperty('--sx', sx);
+      document.documentElement.style.setProperty('--sy', sy);
+
+      // Leaning glasses in Hero
+      if (currentScene === 0) {
+        const glasses = document.getElementById('hero-glasses');
+        if (glasses) {
+          glasses.style.setProperty('--glasses-tx', `${sx * -26}px`);
+          glasses.style.setProperty('--glasses-ty', `${sy * -16}px`);
+          glasses.style.transform = `translate(calc(-50% + ${sx * -26}px), calc(-50% + ${sy * -16}px)) rotate(${sx * 2}deg)`;
+        }
+      }
+    });
+
+    // Hover product eases playbackRate to 2.6x and updates caption
+    const heroGlassesWrap = document.getElementById('hero-glasses');
+    const captionLabel = document.getElementById('caption-label');
+
+    heroGlassesWrap.addEventListener('mouseenter', () => {
+      if (turntableVideo) {
+        turntableVideo.playbackRate = 2.6;
+      }
+      if (captionLabel) {
+        captionLabel.textContent = 'SPINNING · 2.6×';
+      }
+    });
+
+    heroGlassesWrap.addEventListener('mouseleave', () => {
+      if (turntableVideo) {
+        turntableVideo.playbackRate = 1.0;
+      }
+      if (captionLabel) {
+        captionLabel.textContent = 'HOVER TO SPIN · SCROLL TO EXPLORE';
+      }
+    });
+
+    /* =========================================================
+       E. LENS COLOUR SYSTEM & TOAST
+       ========================================================= */
+    const lensOrbs = document.querySelectorAll('.lens-orb');
+    const lensNameTag = document.getElementById('lens-name-tag');
+    const toast = document.getElementById('toast');
+    let toastTimeout = null;
+
+    function setLensHue(hue, name) {
+      document.documentElement.style.setProperty('--hue', hue);
+      const halfHue = (parseFloat(hue) * 0.5) + 'deg';
+      document.documentElement.style.setProperty('--hue-half', halfHue);
+      if (lensNameTag) lensNameTag.textContent = name;
+
+      lensOrbs.forEach(orb => {
+        if (orb.dataset.name === name) orb.classList.add('active');
+        else orb.classList.remove('active');
+      });
+
+      // Sync pre-order chips
+      document.querySelectorAll('#modal-lens-chips .chip').forEach(chip => {
+        if (chip.dataset.name === name) chip.classList.add('active');
+        else chip.classList.remove('active');
+      });
+
+      // Springy pop on product
+      heroGlassesWrap.classList.remove('spring-pop');
+      void heroGlassesWrap.offsetWidth;
+      heroGlassesWrap.classList.add('spring-pop');
+
+      showToast(`LENS CALIBRATED // ${name.toUpperCase()} SPECTRUM [${hue}]`);
+    }
+
+    lensOrbs.forEach(orb => {
+      orb.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setLensHue(orb.dataset.hue, orb.dataset.name);
+      });
+    });
+
+    function showToast(msg) {
+      clearTimeout(toastTimeout);
+      toast.textContent = msg;
+      toast.classList.add('show');
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2600);
+    }
+
+    /* =========================================================
+       F. PRE-ORDER MODAL WITH CIRCULAR CLIP-PATH REVEAL
+       ========================================================= */
+    const preorderModal = document.getElementById('preorder-modal');
+    const modalTargetTitle = document.getElementById('modal-target-title');
+    const modalTargetSub = document.getElementById('modal-target-sub');
+    const modalTargetPrice = document.getElementById('modal-target-price');
+
+    function openPreorder(e, title = "AERO.VISION", sub = "DROP 01 // 500 PAIRS WORLDWIDE", price = "$289") {
+      const clickX = e ? e.clientX : window.innerWidth / 2;
+      const clickY = e ? e.clientY : window.innerHeight / 2;
+
+      preorderModal.style.setProperty('--click-x', `${clickX}px`);
+      preorderModal.style.setProperty('--click-y', `${clickY}px`);
+
+      modalTargetTitle.textContent = title;
+      modalTargetSub.textContent = sub;
+      modalTargetPrice.textContent = price;
+
+      preorderModal.classList.add('open');
+    }
+
+    function closePreorder() {
+      preorderModal.classList.remove('open');
+    }
+
+    document.getElementById('header-preorder-btn').addEventListener('click', (e) => openPreorder(e));
+    document.getElementById('outro-preorder-btn').addEventListener('click', (e) => openPreorder(e));
+    document.getElementById('modal-close-btn').addEventListener('click', closePreorder);
+
+    preorderModal.addEventListener('click', (e) => {
+      if (e.target === preorderModal) closePreorder();
+    });
+
+    // Chips selection inside modal
+    document.querySelectorAll('#modal-lens-chips .chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        setLensHue(chip.dataset.hue, chip.dataset.name);
+      });
+    });
+
+    document.querySelectorAll('#modal-fit-chips .chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#modal-fit-chips .chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+
+    document.getElementById('modal-confirm-btn').addEventListener('click', () => {
+      closePreorder();
+      showToast(`CONFIRMED // ${modalTargetTitle.textContent} RESERVED`);
+    });
+
+    /* =========================================================
+       G. CUSTOM CURSOR & ?REC MODE
+       ========================================================= */
+    const cursor = document.getElementById('custom-cursor');
+    const isRecMode = window.location.search.includes('rec');
+    if (isRecMode) cursor.classList.add('rec-mode');
+
+    let mouseCurX = window.innerWidth / 2;
+    let mouseCurY = window.innerHeight / 2;
+    let realMouseX = mouseCurX;
+    let realMouseY = mouseCurY;
+
+    window.addEventListener('mousemove', (e) => {
+      realMouseX = e.clientX;
+      realMouseY = e.clientY;
+    });
+
+    function renderCursor() {
+      mouseCurX += (realMouseX - mouseCurX) * 0.25;
+      mouseCurY += (realMouseY - mouseCurY) * 0.25;
+      cursor.style.left = `${mouseCurX}px`;
+      cursor.style.top = `${mouseCurY}px`;
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+
+    function bindHoverToElements() {
+      document.querySelectorAll('button, a, .hotspot, .lens-orb, .chip, .product-card, .glasses-wrap, .lobe-item').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+    }
+    bindHoverToElements();
+
+    /* =========================================================
+       H. LIVE CLOCK & DATE
+       ========================================================= */
+    function updateLiveClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const clockEl = document.getElementById('clock-display');
+      if (clockEl) clockEl.textContent = `${h}:${m}`;
+    }
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+
+    /* =========================================================
+       I. EXTENDED MULTI-PRODUCT CATALOGUE (8 Models, 3D Tilt, Pages)
+       ========================================================= */
+    const productsData = [
+      {
+        id: "aero-vision",
+        name: "KYNE AERO.VISION",
+        badge: "FLAGSHIP · SINTERED Ti",
+        category: "chrome",
+        weight: "24 GRAMS",
+        tagline: "LIQUID CHROME / PHOTOCHROMIC ACID",
+        price: "$289",
+        specs: "Optics: 12-85% VLT Photochromic · Curve: 8.25 Toric · Frame: Vacuum-Deposited Titanium",
+        accent: "#c6ff3d",
+        quote: "Rode 240km in the Alps. Light as air, vision never blurred.",
+        author: "L. Varga, Pro Peloton"
+      },
+      {
+        id: "hyper-spectrum",
+        name: "KYNE HYPER.SPECTRUM",
+        badge: "AERO SPEED · CARBON MONO",
+        category: "speed",
+        weight: "21 GRAMS",
+        tagline: "MATTE CARBON / PRISMATIC VISOR",
+        price: "$320",
+        specs: "Optics: Cylindrical Shield · Curve: Base 7 · Frame: Toray 1000 Monocoque Carbon",
+        accent: "#00e5ff",
+        quote: "The contrast in tunnel-to-sun transitions is immediate.",
+        author: "M. Chen, Criterium Racer"
+      },
+      {
+        id: "velo-chrome",
+        name: "KYNE VELO.CHROME",
+        badge: "SPEED SERIES · VENTURI",
+        category: "speed",
+        weight: "23 GRAMS",
+        tagline: "GLOSS WHITE / MERCURY FLASH",
+        price: "$295",
+        specs: "Optics: Mercury Mirror Cat 3 · Curve: Base 8 · Frame: Bio-Grilamid TR90 with Venturi Ports",
+        accent: "#f1f3ee",
+        quote: "Zero fogging at 60 km/h descents in torrential rain.",
+        author: "S. Lindqvist, Track Cyclist"
+      },
+      {
+        id: "exo-blade",
+        name: "KYNE EXO.BLADE",
+        badge: "LIQUID CHROME · LASER SINTER",
+        category: "chrome",
+        weight: "26 GRAMS",
+        tagline: "RAW TITANIUM / DEEP VIOLET",
+        price: "$340",
+        specs: "Optics: Violet Polarized Kling-V · Curve: Base 8.5 · Frame: 3D Sintered Grade 5 Ti",
+        accent: "#b347ff",
+        quote: "The sharpest liquid chrome sculpture ever engineered.",
+        author: "K. Novak, Industrial Design Lead"
+      },
+      {
+        id: "neuron-zero",
+        name: "KYNE NEURON.ZERO",
+        badge: "LAB PROTO · ULTRA-LIGHT",
+        category: "lab",
+        weight: "19 GRAMS",
+        tagline: "STEALTH OBSIDIAN / CYBER LIME",
+        price: "$310",
+        specs: "Optics: HUD-Ready Polarized Contrast · Curve: Base 8 · Frame: Micro-Lattice Alloy",
+        accent: "#c6ff3d",
+        quote: "19 grams feels like wearing nothing at all.",
+        author: "D. Rossi, Gravel Endurance"
+      },
+      {
+        id: "strato-glide",
+        name: "KYNE STRATO.GLIDE",
+        badge: "AERO SPEED · HYDROPHOBIC",
+        category: "speed",
+        weight: "22 GRAMS",
+        tagline: "FROSTED SMOKE / AURORA BLUE",
+        price: "$275",
+        specs: "Optics: Aurora Gradient Mirror · Curve: Base 8 · Frame: Semi-Translucent Polymer",
+        accent: "#00e5ff",
+        quote: "Seamless field of view. The frame completely disappears.",
+        author: "A. Morales, Triathlete"
+      },
+      {
+        id: "titan-phantom",
+        name: "KYNE TITAN.PHANTOM",
+        badge: "LIQUID CHROME · BRONZE PATINA",
+        category: "chrome",
+        weight: "28 GRAMS",
+        tagline: "BERYLLIUM COPPER / INFRARED OPTICS",
+        price: "$360",
+        specs: "Optics: Infrared Rejection & High Vis · Curve: Base 8.25 · Frame: Beryllium Bronze & Chrome",
+        accent: "#ff5500",
+        quote: "Unmatched specular reflection under intense desert sun.",
+        author: "R. Thorne, Moto Endurance"
+      },
+      {
+        id: "void-runner",
+        name: "KYNE VOID.RUNNER",
+        badge: "LAB PROTO · SUB-20G MATRIX",
+        category: "lab",
+        weight: "18 GRAMS",
+        tagline: "AEROGEL MATRIX / CONTRAST ROSE",
+        price: "$290",
+        specs: "Optics: Photochromic Rose Cat 1-3 · Curve: Base 7.5 · Frame: Carbon-Aerogel Matrix",
+        accent: "#ff3366",
+        quote: "Surreal clarity on dawn and dusk training runs.",
+        author: "E. Sommer, Ultra Runner"
+      }
+    ];
+
+    let currentCatFilter = "all";
+    let catPage = 1;
+    const itemsPerPage = 4;
+
+    function renderProducts() {
+      const grid = document.getElementById('product-grid');
+      grid.innerHTML = '';
+
+      const filtered = productsData.filter(p => currentCatFilter === "all" || p.category === currentCatFilter);
+      const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
+      if (catPage > totalPages) catPage = totalPages;
+
+      const start = (catPage - 1) * itemsPerPage;
+      const paginated = filtered.slice(start, start + itemsPerPage);
+
+      paginated.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div>
+            <div class="card-top">
+              <span class="card-badge font-mono">${p.badge}</span>
+              <span class="card-weight font-mono">${p.weight}</span>
+            </div>
+
+            <div class="card-visual">
+              <svg viewBox="0 0 160 80" fill="none">
+                <!-- High tech glasses vector graphic with dynamic gradient -->
+                <defs>
+                  <linearGradient id="grad-${p.id}" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="${p.accent}" stop-opacity="0.9"/>
+                    <stop offset="50%" stop-color="#fff" stop-opacity="0.6"/>
+                    <stop offset="100%" stop-color="${p.accent}" stop-opacity="0.9"/>
+                  </linearGradient>
+                </defs>
+                <!-- Brow bar -->
+                <path d="M15 32 Q80 18 145 32" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Left lens shield -->
+                <path d="M18 34 Q45 30 75 35 Q78 58 48 62 Q20 60 18 34Z" fill="url(#grad-${p.id})" fill-opacity="0.3" stroke="#fff" stroke-width="1.4"/>
+                <!-- Right lens shield -->
+                <path d="M85 35 Q115 30 142 34 Q140 60 112 62 Q82 58 85 35Z" fill="url(#grad-${p.id})" fill-opacity="0.3" stroke="#fff" stroke-width="1.4"/>
+                <!-- Bridge -->
+                <path d="M75 35 Q80 34 85 35" stroke="${p.accent}" stroke-width="3"/>
+                <!-- Temples -->
+                <path d="M16 33 L2 26" stroke="${p.accent}" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M144 33 L158 26" stroke="${p.accent}" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <div class="card-info">
+              <h3 class="font-display">${p.name}</h3>
+              <div class="card-tagline font-mono">${p.tagline}</div>
+              <div class="card-swatches">
+                <span class="card-swatch" style="background: #c6ff3d;"></span>
+                <span class="card-swatch" style="background: #00e5ff;"></span>
+                <span class="card-swatch" style="background: #ff5500;"></span>
+                <span class="card-swatch" style="background: #b347ff;"></span>
+              </div>
+              <p class="card-specs font-mono">${p.specs}</p>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <span class="card-price font-display">${p.price}</span>
+            <div class="card-btns">
+              <button class="card-quick-btn font-mono" data-id="${p.id}">TECH SPECS</button>
+              <button class="card-buy-btn font-mono" data-id="${p.id}">PRE-ORDER</button>
+            </div>
+          </div>
+        `;
+
+        // 3D Tilt Effect on mousemove
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+
+          const cx = rect.width / 2;
+          const cy = rect.height / 2;
+          const rx = -((y - cy) / cy) * 10;
+          const ry = ((x - cx) / cx) * 10;
+          card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+        });
+
+        // Button handlers
+        card.querySelector('.card-buy-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          openPreorder(e, p.name, p.tagline, p.price);
+        });
+
+        card.querySelector('.card-quick-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          openQuickView(p);
+        });
+
+        grid.appendChild(card);
+      });
+
+      // Update Pagination state
+      document.getElementById('cat-page-indicator').textContent = `PAGE 0${catPage} / 0${totalPages}`;
+      document.getElementById('cat-prev-btn').disabled = catPage <= 1;
+      document.getElementById('cat-next-btn').disabled = catPage >= totalPages;
+
+      bindHoverToElements();
+    }
+
+    // Category Tabs Filtering
+    document.querySelectorAll('#cat-category-tabs .cat-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#cat-category-tabs .cat-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCatFilter = btn.dataset.cat;
+        catPage = 1;
+        renderProducts();
+      });
+    });
+
+    document.getElementById('cat-prev-btn').addEventListener('click', () => {
+      if (catPage > 1) {
+        catPage--;
+        renderProducts();
+      }
+    });
+
+    document.getElementById('cat-next-btn').addEventListener('click', () => {
+      catPage++;
+      renderProducts();
+    });
+
+    function openCatalogue() {
+      isCatalogueOpen = true;
+      document.getElementById('catalogue-drawer').classList.add('open');
+      renderProducts();
+    }
+
+    function closeCatalogue() {
+      isCatalogueOpen = false;
+      document.getElementById('catalogue-drawer').classList.remove('open');
+    }
+
+    document.getElementById('cat-close-btn').addEventListener('click', closeCatalogue);
+    document.getElementById('nav-collection').addEventListener('click', openCatalogue);
+    document.getElementById('nav-shop').addEventListener('click', openCatalogue);
+    document.getElementById('outro-explore-btn').addEventListener('click', openCatalogue);
+
+    // Quick View Modal
+    function openQuickView(prod) {
+      const qvModal = document.getElementById('quickview-modal');
+      const qvContent = document.getElementById('qv-content');
+
+      qvContent.innerHTML = `
+        <span class="font-mono" style="font-size: 10px; color: var(--lime); letter-spacing: 0.16em;">TECHNICAL SCHEMATICS // ${prod.id.toUpperCase()}</span>
+        <h3 class="font-display" style="font-size: 28px; margin: 8px 0;">${prod.name}</h3>
+        <p class="font-mono" style="font-size: 11px; color: var(--mute); margin-bottom: 24px;">${prod.tagline}</p>
+
+        <div style="background: #040404; border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 24px;">
+          <div class="font-mono" style="font-size: 10px; color: var(--mute); line-height: 2;">
+            <div style="display: flex; justify-content: space-between;"><span>WEIGHT</span> <span style="color: #fff;">${prod.weight}</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>LENS MATRIX</span> <span style="color: #fff;">Photochromic Kling-V Dual Polarized</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>AERODYNAMIC COEFFICIENT</span> <span style="color: #fff;">0.14 Cd (Decentered Aero Flow)</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>TEMPERATURE RATING</span> <span style="color: #fff;">-30°C to +65°C Operating Threshold</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>PRICE</span> <span style="color: var(--lime); font-weight: bold;">${prod.price}</span></div>
+          </div>
+        </div>
+
+        <div style="border-left: 2px solid var(--lime); padding-left: 14px; margin-bottom: 28px;">
+          <p style="font-size: 12px; font-style: italic; color: var(--txt); margin-bottom: 6px;">"${prod.quote}"</p>
+          <span class="font-mono" style="font-size: 10px; color: var(--mute);">— ${prod.author}</span>
+        </div>
+
+        <button class="modal-reserve-btn font-mono" id="qv-preorder-btn" style="width: 100%;">PRE-ORDER THIS MODEL (${prod.price})</button>
+      `;
+
+      qvModal.classList.add('open');
+
+      document.getElementById('qv-preorder-btn').addEventListener('click', (e) => {
+        qvModal.classList.remove('open');
+        openPreorder(e, prod.name, prod.tagline, prod.price);
+      });
+    }
+
+    document.getElementById('qv-close-btn').addEventListener('click', () => {
+      document.getElementById('quickview-modal').classList.remove('open');
+    });
+
+    // About & Info Nav Modals
+    const aboutModal = document.getElementById('about-modal');
+    const infoModal = document.getElementById('info-modal');
+
+    document.getElementById('nav-about').addEventListener('click', () => aboutModal.classList.add('open'));
+    document.getElementById('about-close-btn').addEventListener('click', () => aboutModal.classList.remove('open'));
+
+    document.getElementById('nav-info').addEventListener('click', () => infoModal.classList.add('open'));
+    document.getElementById('info-close-btn').addEventListener('click', () => infoModal.classList.remove('open'));
+
+    [aboutModal, infoModal].forEach(m => {
+      m.addEventListener('click', (e) => {
+        if (e.target === m) m.classList.remove('open');
+      });
+    });
+
+    /* =========================================================
+       J. INTRO CHOREOGRAPHY ON LOAD
+       1. Header drops in, footer rises
+       2. Wordmark opens from centre line
+       3. Plinth rises 40vh
+       4. Glasses fall in from translateY(-30vh) scale(.6) rotate(-14deg) blur(20px)
+       5. Corner lines rise
+       ========================================================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      initWebGL();
+
+      const header = document.getElementById('site-header');
+      const footer = document.getElementById('site-footer');
+      const wordmark = document.getElementById('hero-wordmark');
+      const plinth = document.getElementById('hero-plinth');
+      const glasses = document.getElementById('hero-glasses');
+
+      // Initial intro setup
+      wordmark.style.transform = 'scaleY(0)';
+      plinth.style.transform = 'translateX(-50%) translateY(40vh)';
+      glasses.style.transform = 'translate(-50%, -50%) translateY(-30vh) scale(0.6) rotate(-14deg)';
+      glasses.style.filter = 'blur(20px)';
+      glasses.style.opacity = '0';
+
+      // 1. Header & Footer (150ms)
+      setTimeout(() => {
+        header.classList.add('loaded');
+        footer.classList.add('loaded');
+      }, 150);
+
+      // 2. Wordmark opens from centre line (350ms)
+      setTimeout(() => {
+        wordmark.style.transition = 'transform 1.2s var(--out), opacity 1.2s var(--out)';
+        wordmark.style.transform = 'scaleY(1)';
+      }, 350);
+
+      // 3. Plinth rises 40vh (550ms)
+      setTimeout(() => {
+        plinth.style.transition = 'transform 1.4s var(--out)';
+        plinth.style.transform = 'translateX(-50%) translateY(0)';
+      }, 550);
+
+      // 4. Glasses fall in from translateY(-30vh) scale(.6) rotate(-14deg) blur(20px) (750ms)
+      setTimeout(() => {
+        glasses.style.transition = 'transform 1.5s var(--spring), filter 1.2s var(--out), opacity 0.8s var(--out)';
+        glasses.style.transform = 'translate(-50%, -50%) scale(1) rotate(0deg)';
+        glasses.style.filter = 'blur(0px)';
+        glasses.style.opacity = '1';
+      }, 750);
+
+      // 5. Corner lines rise (1100ms)
+      setTimeout(() => {
+        updateCornerLines(0);
+      }, 1100);
+    });
+  </script>
+</body>
+</html>
